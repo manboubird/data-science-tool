@@ -1,4 +1,7 @@
 ; https://github.com/avibryant/simmer
+;
+; drake -w simmer.drake %all
+;
 SIMMER_EXE:=/user/local/bin/simmer
 
 file() [eval]
