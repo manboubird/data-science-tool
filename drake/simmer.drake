@@ -1,0 +1,53 @@
+; https://github.com/avibryant/simmer
+SIMMER_EXE:=/user/local/bin/simmer
+
+file() [eval]
+  echo "$CODE" | tee $OUTPUT | nl
+
+simmer() [eval]
+  cat $INPUT | $[SIMMER_EXE] | cut -f 1,3 | tee $OUTPUT
+
+cal.in <- [method:file method-mode:append]
+  sum:x	1
+  min:y	3
+  min:y	4
+  sum:x	2
+  min:y	3
+  max:z	3
+  max:z	6
+  max:z	3
+
+stats.in <- [method:file method-mode:append]
+  uv:x	a
+  uv:x	b
+  uv:x	a
+  pct50:x	2
+  pct50:x	4
+  pct50:x	4
+  pct50:x	100
+  dcy:x	1365187171:100
+  dcy:x	1365100771:100
+  dcy:x	1365014371:100
+
+aggr.in <- [method:file method-mode:append]
+  top3:sum:x	a:1
+  top3:sum:x	b:2
+  top3:sum:x	a:2
+  top3:sum:x	c:1
+  top3:sum:x	d:3
+  bot3:sum:x	a:1
+  bot3:sum:x	b:2
+  bot3:sum:x	a:2
+  bot3:sum:x	c:1
+  bot3:sum:x	d:3
+  mh:x	a
+  mh:x	b
+  mh:x	c
+  fh4:x	hello
+  fh4:x	world
+  fh4:x	temp:32
+
+cal.o, %all   <- cal.in [method:simmer]
+stats.o, %all <- stats.in [method:simmer]
+aggr.o, %all  <- aggr.in [method:simmer]
+
