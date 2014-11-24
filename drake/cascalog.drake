@@ -1,0 +1,26 @@
+; http://nathanmarz.com/blog/introducing-cascalog-a-clojure-based-query-language-for-hado.html
+;
+; Run with method executing a script:
+;   drake -w cascalog.drake %playground
+;
+; Run with code eval:
+;   drake -w cascalog.drake %playground.eval
+;
+CASCALOG_JAR:=$[HOME]/local/bin/cascalog-core-standalone.jar
+
+file() [eval]
+  echo "$CODE" | tee $OUTPUT | nl
+
+cascalog() [eval]
+  java -jar $[CASCALOG_JAR] $INPUT
+
+playground.clg <- [method:file method-mode:append]
+  (use 'cascalog.playground) (bootstrap)
+  (?<- (stdout) [?person] (age ?person 25))
+
+%playground <- playground.clg [method:cascalog]
+
+%playground.eval <- [eval]
+  java -jar $[CASCALOG_JAR] -e "$CODE"
+  (use 'cascalog.playground) (bootstrap)
+  (?<- (stdout) [?person] (age ?person 25))
